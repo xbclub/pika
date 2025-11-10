@@ -19,41 +19,27 @@ Pika 是一个轻量级的探针监控系统，支持实时数据采集、存储
 - Docker 20.10+
 - Docker Compose 1.29+
 
-### 使用 Docker Compose 部署（推荐）
+### 一键部署
 
-#### 1. 克隆项目
+#### 1. 下载配置文件
 
 ```bash
-git clone https://github.com/dushixiang/pika.git
-cd pika
+# 下载 docker-compose.yml 配置文件
+curl -O https://raw.githubusercontent.com/dushixiang/pika/main/docker-compose.yml
+
+# 或使用 wget
+wget https://raw.githubusercontent.com/dushixiang/pika/main/docker-compose.yml
 ```
 
-#### 2. 配置环境变量
+#### 2. 修改配置（可选）
 
-编辑 `docker-compose.yml` 文件，修改以下配置项：
+编辑 `docker-compose.yml` 文件，根据需要修改以下配置：
 
-```yaml
-# PostgreSQL 数据库配置
-POSTGRES_DB: pika           # 数据库名称
-POSTGRES_USER: pika         # 数据库用户名
-POSTGRES_PASSWORD: pika     # 数据库密码（建议修改）
+- **数据库密码**：`POSTGRES_PASSWORD` 和 `DATABASE_POSTGRES_PASSWORD`（生产环境建议修改）
+- **JWT 密钥**：`APP_JWT_SECRET`（必须修改为至少 32 位的随机字符串）
 
-# Pika 应用配置
-DATABASE_POSTGRES_HOSTNAME: postgresql  # 数据库主机名
-DATABASE_POSTGRES_PORT: 5432           # 数据库端口
-DATABASE_POSTGRES_USERNAME: pika       # 数据库用户名
-DATABASE_POSTGRES_PASSWORD: pika       # 数据库密码（需与上面一致）
-DATABASE_POSTGRES_DATABASE: pika       # 数据库名称
-SERVER_ADDR: "0.0.0.0:8080"           # 服务监听地址
-SERVER_IP_EXTRACTOR: "x-forwarded-for" # IP 提取方式
-APP_JWT_SECRET: "your-secret-key"      # JWT 密钥（必须修改！）
-```
-
-**重要**：请务必修改 `APP_JWT_SECRET` 为您自己的密钥，建议使用至少 32 位的随机字符串。
-
-生成随机密钥示例：
+生成随机密钥：
 ```bash
-# 使用 openssl 生成 32 位随机字符串
 openssl rand -base64 32
 ```
 
@@ -70,12 +56,9 @@ docker-compose ps
 docker-compose logs -f pika
 ```
 
-#### 4. 验证部署
+#### 4. 访问服务
 
-服务启动后，访问以下地址：
-
-- **API 服务**：http://localhost:8080
-- **健康检查**：http://localhost:8080/health（如果有）
+服务启动后，访问 http://localhost:8080
 
 #### 5. 停止服务
 
