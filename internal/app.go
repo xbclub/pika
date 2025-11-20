@@ -38,9 +38,12 @@ func setup(app *orz.App) error {
 
 	// 读取应用配置
 	var appConfig config.AppConfig
-	if err := app.GetConfig().App.Unmarshal(&appConfig); err != nil {
-		app.Logger().Error("读取配置失败", zap.Error(err))
-		return err
+	_config := app.GetConfig()
+	if _config != nil {
+		if err := _config.App.Unmarshal(&appConfig); err != nil {
+			app.Logger().Error("读取配置失败", zap.Error(err))
+			return err
+		}
 	}
 
 	// 设置默认值
@@ -224,7 +227,6 @@ func autoMigrate(database *gorm.DB) error {
 		&models.GPUMetric{},
 		&models.TemperatureMetric{},
 		&models.HostMetric{},
-		&models.DockerMetric{},
 		&models.AuditResult{},
 		&models.Property{},
 		&models.AlertConfig{},

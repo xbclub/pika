@@ -483,11 +483,6 @@ func (a *Agent) collectAndSendAllMetrics(conn *safeConn, manager *collector.Mana
 		log.Printf("ℹ️  发送温度信息失败: %v", err)
 	}
 
-	// Docker 容器信息（可选）
-	if err := manager.CollectAndSendDocker(conn); err != nil {
-		log.Printf("ℹ️  发送Docker信息失败: %v", err)
-	}
-
 	if hasError {
 		return fmt.Errorf("部分指标采集失败")
 	}

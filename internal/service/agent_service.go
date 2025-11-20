@@ -335,41 +335,6 @@ func (s *AgentService) HandleMetricData(ctx context.Context, agentID string, met
 		}
 		return nil
 
-	case protocol.MetricTypeDocker:
-		// Docker现在是数组,需要批量处理
-		var dockerDataList []protocol.DockerContainerData
-		if err := json.Unmarshal(data, &dockerDataList); err != nil {
-			return err
-		}
-		metrics := make([]models.DockerMetric, 0, len(dockerDataList))
-		for _, dockerData := range dockerDataList {
-			metrics = append(metrics, models.DockerMetric{
-				AgentID:       agentID,
-				ContainerID:   dockerData.ContainerID,
-				Name:          dockerData.Name,
-				Image:         dockerData.Image,
-				State:         dockerData.State,
-				Status:        dockerData.Status,
-				CPUPercent:    dockerData.CPUPercent,
-				MemoryUsage:   dockerData.MemoryUsage,
-				MemoryLimit:   dockerData.MemoryLimit,
-				MemoryPercent: dockerData.MemoryPercent,
-				NetInput:      dockerData.NetInput,
-				NetOutput:     dockerData.NetOutput,
-				BlockInput:    dockerData.BlockInput,
-				BlockOutput:   dockerData.BlockOutput,
-				Pids:          dockerData.Pids,
-				Timestamp:     now,
-			})
-		}
-		if err := s.metricRepo.ReplaceDockerMetrics(ctx, agentID, metrics); err != nil {
-			s.logger.Error("failed to replace docker metrics",
-				zap.Error(err),
-				zap.String("agentID", agentID))
-			return err
-		}
-		return nil
-
 	case protocol.MetricTypeMonitor:
 		// 监控数据也是数组,需要批量处理
 		var monitorDataList []protocol.MonitorData
@@ -513,14 +478,6 @@ func (s *AgentService) GetLatestMetrics(ctx context.Context, agentID string) (*L
 		result.Host = host
 	}
 
-	// 获取最新Docker容器信息
-	if docker, err := s.metricRepo.GetLatestDockerMetrics(ctx, agentID); err == nil && len(docker) > 0 {
-		for i := range docker {
-			docker[i].Image = ""
-		}
-		result.Docker = docker
-	}
-
 	// 获取最新GPU信息
 	if gpu, err := s.metricRepo.GetLatestGPUMetrics(ctx, agentID); err == nil && len(gpu) > 0 {
 		result.GPU = gpu
@@ -593,7 +550,6 @@ type LatestMetrics struct {
 	Network *NetworkSummary            `json:"network,omitempty"`
 	Load    *models.LoadMetric         `json:"load,omitempty"`
 	Host    *models.HostMetric         `json:"host,omitempty"`
-	Docker  []models.DockerMetric      `json:"docker,omitempty"`
 	GPU     []models.GPUMetric         `json:"gpu,omitempty"`
 	Temp    []models.TemperatureMetric `json:"temperature,omitempty"`
 }

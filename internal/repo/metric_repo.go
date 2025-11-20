@@ -57,30 +57,6 @@ func (r *MetricRepo) SaveTemperatureMetric(ctx context.Context, metric *models.T
 	return r.db.WithContext(ctx).Create(metric).Error
 }
 
-// ReplaceDockerMetrics 用最新一次采集结果替换 Docker 容器指标
-func (r *MetricRepo) ReplaceDockerMetrics(ctx context.Context, agentID string, metrics []models.DockerMetric) error {
-	return r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
-		// 清空该探针历史数据，只保留最新一次采集
-		if err := tx.Where("agent_id = ?", agentID).Delete(&models.DockerMetric{}).Error; err != nil {
-			return err
-		}
-		if len(metrics) == 0 {
-			return nil
-		}
-		return tx.Create(&metrics).Error
-	})
-}
-
-// GetLatestDockerMetrics 获取最新的Docker容器指标列表
-func (r *MetricRepo) GetLatestDockerMetrics(ctx context.Context, agentID string) ([]models.DockerMetric, error) {
-	var metrics []models.DockerMetric
-	err := r.db.WithContext(ctx).
-		Where("agent_id = ?", agentID).
-		Order("name").
-		Find(&metrics).Error
-	return metrics, err
-}
-
 // GetLatestGPUMetrics 获取最新的GPU指标列表
 func (r *MetricRepo) GetLatestGPUMetrics(ctx context.Context, agentID string) ([]models.GPUMetric, error) {
 	var metrics []models.GPUMetric
@@ -162,7 +138,6 @@ func (r *MetricRepo) DeleteOldMetrics(ctx context.Context, beforeTimestamp int64
 		&models.DiskIOMetric{},
 		&models.GPUMetric{},
 		&models.TemperatureMetric{},
-		&models.DockerMetric{},
 		&models.MonitorMetric{},
 	}
 

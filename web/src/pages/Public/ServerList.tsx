@@ -602,7 +602,7 @@ const ServerList = () => {
     return (
         <div className="min-h-screen bg-white text-slate-900 flex flex-col">
             <PublicHeader
-                title="皮卡监控"
+                title="设备监控"
                 lastUpdated={lastUpdatedDisplay}
                 viewMode={viewMode}
                 onViewModeChange={setViewMode}

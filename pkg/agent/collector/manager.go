@@ -23,7 +23,6 @@ type Manager struct {
 	hostCollector        *HostCollector
 	temperatureCollector *TemperatureCollector
 	gpuCollector         *GPUCollector
-	dockerCollector      *DockerCollector
 	monitorCollector     *MonitorCollector
 }
 
@@ -39,7 +38,6 @@ func NewManager(cfg *config.Config) *Manager {
 		hostCollector:        NewHostCollector(),
 		temperatureCollector: NewTemperatureCollector(),
 		gpuCollector:         NewGPUCollector(),
-		dockerCollector:      NewDockerCollector(),
 		monitorCollector:     NewMonitorCollector(),
 	}
 }
@@ -130,17 +128,6 @@ func (m *Manager) CollectAndSendTemperature(conn WebSocketWriter) error {
 	}
 
 	return m.sendMetrics(conn, protocol.MetricTypeTemperature, tempDataList)
-}
-
-// CollectAndSendDocker 采集并发送 Docker 容器信息
-func (m *Manager) CollectAndSendDocker(conn WebSocketWriter) error {
-	dockerDataList, err := m.dockerCollector.Collect()
-	if err != nil || len(dockerDataList) == 0 {
-		// Docker 监控不是必须的,失败或无数据时直接返回
-		return nil
-	}
-
-	return m.sendMetrics(conn, protocol.MetricTypeDocker, dockerDataList)
 }
 
 // CollectAndSendMonitor 采集并发送监控数据

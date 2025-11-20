@@ -1,4 +1,4 @@
-import {Activity, LayoutGrid, List, LogIn, Server, Sparkles} from 'lucide-react';
+import {Activity, LayoutGrid, List, LogIn, Server} from 'lucide-react';
 import GithubSvg from "../assets/github.svg";
 
 interface PublicHeaderProps {
@@ -38,7 +38,8 @@ const PublicHeader = ({
                         {/* 最后更新时间 */}
                         {lastUpdated && (
                             <>
-                                <div className="flex items-center gap-1.5 rounded-lg bg-slate-50 px-3 py-2 text-slate-600">
+                                <div
+                                    className="flex items-center gap-1.5 rounded-lg bg-slate-50 px-3 py-2 text-slate-600">
                                     <div className="h-2 w-2 animate-pulse rounded-full bg-emerald-500"/>
                                     <span className="text-xs">
                                         最后更新：<span className="font-semibold text-slate-900">{lastUpdated}</span>
@@ -51,7 +52,8 @@ const PublicHeader = ({
                         {/* 视图切换 */}
                         {showViewToggle && viewMode && onViewModeChange && (
                             <>
-                                <div className="inline-flex items-center gap-0.5 rounded-lg border border-slate-200 bg-slate-50 p-0.5 shadow-sm">
+                                <div
+                                    className="inline-flex items-center gap-0.5 rounded-lg border border-slate-200 bg-slate-50 p-0.5 shadow-sm">
                                     <button
                                         type="button"
                                         onClick={() => onViewModeChange('grid')}
@@ -82,20 +84,20 @@ const PublicHeader = ({
                         )}
 
                         {/* 导航链接 */}
-                        <nav className="flex items-center gap-2">
+                        <nav className="flex items-center">
                             {/* 服务器链接 */}
                             <a
                                 href="/"
-                                className="group inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 shadow-sm transition-all hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 hover:shadow"
+                                className="group inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-600 transition-all"
                             >
                                 <Server className="h-3.5 w-3.5 transition-transform group-hover:scale-110"/>
-                                <span className="hidden sm:inline">服务器</span>
+                                <span className="hidden sm:inline">设备监控</span>
                             </a>
 
                             {/* 监控链接 */}
                             <a
                                 href="/monitors"
-                                className="group inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 shadow-sm transition-all hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 hover:shadow"
+                                className="group inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-600"
                             >
                                 <Activity className="h-3.5 w-3.5 transition-transform group-hover:scale-110"/>
                                 <span className="hidden sm:inline">服务监控</span>

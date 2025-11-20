@@ -194,27 +194,6 @@ export interface HostMetric {
     timestamp: number;       // 时间戳（毫秒）
 }
 
-// Docker 容器指标
-export interface DockerMetric {
-    id: number;
-    agentId: string;
-    containerId: string;
-    name: string;
-    image: string;
-    state: string;
-    status: string;
-    cpuPercent: number;
-    memoryUsage: number;
-    memoryLimit: number;
-    memoryPercent: number;
-    netInput: number;
-    netOutput: number;
-    blockInput: number;
-    blockOutput: number;
-    pids: number;
-    timestamp: number;
-}
-
 // GPU 指标
 export interface GPUMetric {
     id: number;
@@ -378,7 +357,6 @@ export interface LatestMetrics {
     network?: NetworkSummary; // 改为汇总数据
     load?: LoadMetric;
     host?: HostMetric;        // 主机信息
-    docker?: DockerMetric[];  // Docker 容器列表
     gpu?: GPUMetric[];        // GPU 列表
     temperature?: TemperatureMetric[];  // 温度传感器列表
 }
