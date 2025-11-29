@@ -235,7 +235,6 @@ func setupApi(app *orz.App, components *AppComponents) {
 		// 通用属性管理
 		adminApi.GET("/properties/:id", components.PropertyHandler.GetProperty)
 		adminApi.PUT("/properties/:id", components.PropertyHandler.SetProperty)
-		adminApi.DELETE("/properties/:id", components.PropertyHandler.DeleteProperty)
 
 		// 通知渠道测试（从数据库读取配置测试）
 		adminApi.POST("/notification-channels/:type/test", components.PropertyHandler.TestNotificationChannel)

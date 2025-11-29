@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/dushixiang/pika/internal/models"
@@ -23,23 +24,48 @@ const (
 type PropertyService struct {
 	repo   *repo.PropertyRepo
 	logger *zap.Logger
+	// 内存缓存，key 为 property ID，value 为 Property 对象
+	cache map[string]models.Property
+	// 缓存读写锁
+	mu sync.RWMutex
 }
 
 func NewPropertyService(logger *zap.Logger, db *gorm.DB) *PropertyService {
 	return &PropertyService{
 		repo:   repo.NewPropertyRepo(db),
 		logger: logger,
+		cache:  make(map[string]models.Property),
 	}
 }
 
 // Get 获取属性（返回原始 JSON 字符串）
 func (s *PropertyService) Get(ctx context.Context, id string) (models.Property, error) {
-	return s.repo.FindById(ctx, id)
+	// 先尝试从缓存读取
+	s.mu.RLock()
+	if cached, ok := s.cache[id]; ok {
+		s.mu.RUnlock()
+		return cached, nil
+	}
+	s.mu.RUnlock()
+
+	// 缓存未命中，从数据库读取
+	property, err := s.repo.FindById(ctx, id)
+	if err != nil {
+		return models.Property{}, err
+	}
+
+	// 更新缓存
+	s.mu.Lock()
+	s.cache[id] = property
+	s.mu.Unlock()
+
+	return property, nil
 }
 
 // GetValue 获取属性值并反序列化
 func (s *PropertyService) GetValue(ctx context.Context, id string, target interface{}) error {
-	property, err := s.repo.FindById(ctx, id)
+	// 使用 Get 方法，内部已经支持缓存
+	property, err := s.Get(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -66,12 +92,17 @@ func (s *PropertyService) Set(ctx context.Context, id string, name string, value
 		UpdatedAt: time.Now().UnixMilli(),
 	}
 
-	return s.repo.Save(ctx, property)
-}
+	err = s.repo.Save(ctx, property)
+	if err != nil {
+		return err
+	}
 
-// Delete 删除属性
-func (s *PropertyService) Delete(ctx context.Context, id string) error {
-	return s.repo.DeleteById(ctx, id)
+	// 清空缓存中的该项，下次读取时会重新从数据库加载
+	s.mu.Lock()
+	delete(s.cache, id)
+	s.mu.Unlock()
+
+	return nil
 }
 
 func (s *PropertyService) GetNotificationChannelConfigs(ctx context.Context) ([]models.NotificationChannelConfig, error) {

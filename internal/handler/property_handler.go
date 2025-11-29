@@ -82,22 +82,6 @@ func (h *PropertyHandler) SetProperty(c echo.Context) error {
 	})
 }
 
-// DeleteProperty 删除属性
-func (h *PropertyHandler) DeleteProperty(c echo.Context) error {
-	id := c.Param("id")
-
-	if err := h.service.Delete(c.Request().Context(), id); err != nil {
-		h.logger.Error("删除属性失败", zap.String("id", id), zap.Error(err))
-		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"error": "删除属性失败",
-		})
-	}
-
-	return c.JSON(http.StatusOK, map[string]string{
-		"message": "删除成功",
-	})
-}
-
 // GetLogo 获取系统 Logo（公开访问，返回图片文件流）
 func (h *PropertyHandler) GetLogo(c echo.Context) error {
 	sysConfig, err := h.service.GetSystemConfig(c.Request().Context())
