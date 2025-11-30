@@ -1,30 +1,28 @@
-import {Card, Collapse, List, Space, Tag, Descriptions, Tabs, Table, Empty, Alert} from 'antd';
+import {Alert, Card, Descriptions, Empty, List, Space, Table, Tabs, Tag} from 'antd';
 import {
-    CheckCircle,
-    XCircle,
-    AlertTriangle,
-    MinusCircle,
-    Server,
-    Network,
-    Cpu,
-    Users,
-    FileText,
-    Shield,
     Activity,
-    Calendar,
-    Settings,
-    PlayCircle,
     AlertOctagon,
-    LogIn
+    AlertTriangle,
+    Calendar,
+    CheckCircle,
+    Cpu,
+    FileText,
+    LogIn,
+    MinusCircle,
+    Network,
+    PlayCircle,
+    Server,
+    Settings,
+    Shield,
+    Users,
+    XCircle
 } from 'lucide-react';
-import type {VPSAuditResult, ProcessInfo, FileInfo, LoginRecord, LoginSession, SSHKeyInfo, SudoUserInfo} from '../../api/agent';
+import type {ProcessInfo, VPSAuditResult} from '@/api/agent.ts';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import React from 'react';
 
 dayjs.extend(duration);
-
-const {Panel} = Collapse;
 
 interface RiskItem {
     level: 'critical' | 'high' | 'medium' | 'low';
@@ -472,7 +470,8 @@ const AuditResultView = ({result}: AuditResultViewProps) => {
             {/* 风险概览 */}
             {risks.length > 0 && (
                 <Card
-                    title={<Space><AlertOctagon size={18} className="text-red-500"/><span className="font-semibold text-red-500">风险概览</span></Space>}
+                    title={<Space><AlertOctagon size={18} className="text-red-500"/><span
+                        className="font-semibold text-red-500">风险概览</span></Space>}
                     className="border-red-200 bg-red-50"
                 >
                     <List
@@ -592,7 +591,8 @@ const AuditResultView = ({result}: AuditResultViewProps) => {
                                             showIcon
                                         />
                                     )}
-                                    <Card size="small" title={<Space><AlertTriangle size={16} className={result.assetInventory.processAssets?.suspiciousProcesses?.length ? "text-red-500" : ""}/>可疑进程</Space>}>
+                                    <Card size="small" title={<Space><AlertTriangle size={16}
+                                                                                    className={result.assetInventory.processAssets?.suspiciousProcesses?.length ? "text-red-500" : ""}/>可疑进程</Space>}>
                                         {result.assetInventory.processAssets?.suspiciousProcesses?.length ? (
                                             <Table
                                                 size="small"
@@ -602,7 +602,8 @@ const AuditResultView = ({result}: AuditResultViewProps) => {
                                                     {
                                                         title: '异常信息',
                                                         key: 'issue',
-                                                        render: (record: ProcessInfo) => record.exeDeleted ? <Tag color="error">Exe已删除</Tag> : null
+                                                        render: (record: ProcessInfo) => record.exeDeleted ?
+                                                            <Tag color="error">Exe已删除</Tag> : null
                                                     }
                                                 ]}
                                                 rowKey="pid"
@@ -767,15 +768,26 @@ const AuditResultView = ({result}: AuditResultViewProps) => {
                                             showIcon
                                         />
                                     )}
-                                    <Card size="small" title={<Space><AlertTriangle size={16} className={result.assetInventory.fileAssets?.tmpExecutables?.length ? "text-red-500" : ""}/>临时目录可执行文件</Space>}>
+                                    <Card size="small" title={<Space><AlertTriangle size={16}
+                                                                                    className={result.assetInventory.fileAssets?.tmpExecutables?.length ? "text-red-500" : ""}/>临时目录可执行文件</Space>}>
                                         {result.assetInventory.fileAssets?.tmpExecutables?.length ? (
                                             <Table
                                                 size="small"
                                                 dataSource={result.assetInventory.fileAssets.tmpExecutables}
                                                 columns={[
                                                     {title: '路径', dataIndex: 'path', key: 'path'},
-                                                    {title: '大小', dataIndex: 'size', key: 'size', render: (val: number) => `${(val / 1024).toFixed(2)} KB`},
-                                                    {title: '修改时间', dataIndex: 'modTime', key: 'modTime', render: (val: number) => dayjs(val).format('YYYY-MM-DD HH:mm:ss')},
+                                                    {
+                                                        title: '大小',
+                                                        dataIndex: 'size',
+                                                        key: 'size',
+                                                        render: (val: number) => `${(val / 1024).toFixed(2)} KB`
+                                                    },
+                                                    {
+                                                        title: '修改时间',
+                                                        dataIndex: 'modTime',
+                                                        key: 'modTime',
+                                                        render: (val: number) => dayjs(val).format('YYYY-MM-DD HH:mm:ss')
+                                                    },
                                                     {title: '权限', dataIndex: 'permissions', key: 'permissions'},
                                                 ]}
                                                 rowKey="path"
@@ -825,7 +837,8 @@ const AuditResultView = ({result}: AuditResultViewProps) => {
                                                 pagination={false}
                                             />
                                         ) : (
-                                            <Empty description={showAllServices ? "无Systemd服务" : "无活跃的Systemd服务"}/>
+                                            <Empty
+                                                description={showAllServices ? "无Systemd服务" : "无活跃的Systemd服务"}/>
                                         )}
                                     </Card>
                                     <Card size="small" title={<Space><PlayCircle size={16}/>启动脚本</Space>}>
@@ -870,7 +883,8 @@ const AuditResultView = ({result}: AuditResultViewProps) => {
                                             <Empty description="无登录历史"/>
                                         )}
                                     </Card>
-                                    <Card size="small" title={<Space><AlertTriangle size={16} className={result.assetInventory.loginAssets?.failedLogins?.length ? "text-yellow-500" : ""}/>失败登录历史</Space>}>
+                                    <Card size="small" title={<Space><AlertTriangle size={16}
+                                                                                    className={result.assetInventory.loginAssets?.failedLogins?.length ? "text-yellow-500" : ""}/>失败登录历史</Space>}>
                                         {result.assetInventory.loginAssets?.failedLogins?.length ? (
                                             <Table
                                                 size="small"

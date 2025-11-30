@@ -15,8 +15,8 @@ import {
 } from 'lucide-react';
 import type {TooltipProps} from 'recharts';
 import {Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis,} from 'recharts';
-import {type AggregatedMonitorMetric, getMonitorHistory, getMonitorStatsById} from '../../api/monitor';
-import type {MonitorStats} from '../../types';
+import {type AggregatedMonitorMetric, getMonitorHistory, getMonitorStatsById} from '@/api/monitor.ts';
+import type {MonitorStats} from '@/types';
 
 const formatTime = (ms: number): string => {
     if (!ms || ms <= 0) return '0 ms';

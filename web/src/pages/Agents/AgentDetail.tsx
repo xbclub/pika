@@ -1,30 +1,13 @@
 import {useEffect, useState} from 'react';
 import {useNavigate, useParams, useSearchParams} from 'react-router-dom';
 import type {MenuProps, TabsProps} from 'antd';
-import {App, Button, Card, Col, Descriptions, Dropdown, Row, Space, Spin, Tag, Tabs, Alert, Statistic} from 'antd';
-import {
-    Activity,
-    ArrowLeft,
-    Clock,
-    RefreshCw,
-    Shield,
-    Terminal,
-    CheckCircle,
-    XCircle,
-    AlertTriangle,
-    TrendingUp,
-    FileWarning
-} from 'lucide-react';
+import {Alert, App, Button, Card, Descriptions, Dropdown, Space, Spin, Tabs, Tag} from 'antd';
+import {Activity, ArrowLeft, Clock, FileWarning, RefreshCw, Shield, Terminal} from 'lucide-react';
 import TamperProtection from './TamperProtection.tsx';
-import {
-    getAgentForAdmin,
-    getAuditResult,
-    sendAuditCommand,
-    type VPSAuditResult
-} from '../../api/agent';
-import type {Agent} from '../../types';
+import {getAgentForAdmin, getAuditResult, sendAuditCommand, type VPSAuditResult} from '@/api/agent.ts';
+import type {Agent} from '@/types';
 import dayjs from 'dayjs';
-import {getErrorMessage} from '../../lib/utils';
+import {getErrorMessage} from '@/lib/utils';
 import AuditResultView from './AuditResultView';
 
 const AgentDetail = () => {
@@ -235,7 +218,7 @@ const AgentDetail = () => {
                 </div>
             ),
             children: agent?.os.toLowerCase().includes('linux') ? (
-                <TamperProtection agentId={agent.id} />
+                <TamperProtection agentId={agent.id}/>
             ) : (
                 <Alert
                     message="功能限制"

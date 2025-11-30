@@ -2,13 +2,13 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import type {ActionType, ProColumns} from '@ant-design/pro-components';
 import {ProTable} from '@ant-design/pro-components';
 import {App, Button, Divider, Form, Input, InputNumber, Modal, Select, Space, Switch, Tag,} from 'antd';
-import {PageHeader} from '../../components';
+import {PageHeader} from '@/components';
 import {Edit, MinusCircle, Plus, PlusCircle, RefreshCw, Trash2} from 'lucide-react';
 import dayjs from 'dayjs';
-import {getAgentPaging, getTags} from '../../api/agent';
-import type {Agent, MonitorTask, MonitorTaskRequest} from '../../types';
-import {createMonitor, deleteMonitor, listMonitors, updateMonitor} from '../../api/monitor';
-import {getErrorMessage} from '../../lib/utils';
+import {getAgentPaging, getTags} from '@/api/agent.ts';
+import type {Agent, MonitorTask, MonitorTaskRequest} from '@/types';
+import {createMonitor, deleteMonitor, listMonitors, updateMonitor} from '@/api/monitor.ts';
+import {getErrorMessage} from '@/lib/utils';
 
 const HTTP_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'];
 

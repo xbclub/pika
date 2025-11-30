@@ -443,45 +443,6 @@ export interface AlertConfig {
     updatedAt?: number;
 }
 
-// 通知渠道配置（通过 type 标识，不再使用独立ID）
-export interface NotificationChannel {
-    type: 'dingtalk' | 'wecom' | 'feishu' | 'email' | 'webhook'; // 渠道类型，作为唯一标识
-    enabled: boolean; // 是否启用
-    config: Record<string, any>; // JSON配置，根据type不同而不同
-}
-
-// 各种通知渠道的配置类型
-export interface DingTalkConfig {
-    secretKey: string;      // 访问令牌
-    signSecret?: string;    // 加签密钥（可选）
-}
-
-export interface WeComConfig {
-    secretKey: string;      // Webhook Key
-}
-
-export interface FeishuConfig {
-    secretKey: string;      // Webhook Token
-    signSecret?: string;    // 签名密钥（可选）
-}
-
-export interface WebhookConfig {
-    url: string;                        // 自定义URL
-    method?: string;                    // HTTP方法：GET, POST, PUT, PATCH, DELETE，默认POST
-    headers?: Record<string, string>;   // 自定义请求头
-    bodyTemplate?: 'json' | 'form' | 'custom'; // 请求体模板类型
-    customBody?: string;                // 自定义请求体模板（当 bodyTemplate 为 custom 时使用）
-}
-
-export interface EmailConfig {
-    smtpHost: string;
-    smtpPort: number;
-    username: string;
-    password: string;
-    from: string;
-    to: string[];
-}
-
 export interface AlertRecord {
     id: number;
     agentId: string;

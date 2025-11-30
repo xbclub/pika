@@ -1,7 +1,6 @@
 import React, {type ReactNode, useEffect, useMemo, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {
-    Activity,
     ArrowLeft,
     Cpu,
     HardDrive,
@@ -33,19 +32,18 @@ import {
     type GetAgentMetricsRequest,
     getNetworkMetricsByInterface,
     type NetworkMetricByInterface
-} from '../../api/agent';
+} from '@/api/agent.ts';
 import type {
     Agent,
     AggregatedCPUMetric,
     AggregatedDiskIOMetric,
-    AggregatedDiskMetric,
     AggregatedGPUMetric,
     AggregatedMemoryMetric,
     AggregatedNetworkConnectionMetric,
     AggregatedNetworkMetric,
     AggregatedTemperatureMetric,
     LatestMetrics
-} from '../../types';
+} from '@/types';
 
 const formatBytes = (bytes: number | undefined | null): string => {
     if (!bytes || bytes <= 0) return '0 B';
@@ -256,7 +254,7 @@ type MetricsState = {
     memory: AggregatedMemoryMetric[];
     network: AggregatedNetworkMetric[];
     networkConnection: AggregatedNetworkConnectionMetric[];
-    disk: AggregatedDiskMetric[];
+    // disk: AggregatedDiskMetric[];
     diskIO: AggregatedDiskIOMetric[];
     gpu: AggregatedGPUMetric[];
     temperature: AggregatedTemperatureMetric[];
@@ -267,7 +265,7 @@ const createEmptyMetricsState = (): MetricsState => ({
     memory: [],
     network: [],
     networkConnection: [],
-    disk: [],
+    // disk: [],
     diskIO: [],
     gpu: [],
     temperature: [],
@@ -278,7 +276,7 @@ const metricRequestConfig: Array<{ key: keyof MetricsState; type: GetAgentMetric
     {key: 'memory', type: 'memory'},
     {key: 'network', type: 'network'},
     {key: 'networkConnection', type: 'network_connection'},
-    {key: 'disk', type: 'disk'},
+    // {key: 'disk', type: 'disk'},
     {key: 'diskIO', type: 'disk_io'},
     {key: 'gpu', type: 'gpu'},
     {key: 'temperature', type: 'temperature'},

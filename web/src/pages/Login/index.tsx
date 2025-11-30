@@ -2,9 +2,8 @@ import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {App, Button, Form, Input} from 'antd';
 import {GithubOutlined, GlobalOutlined, LockOutlined, UserOutlined} from '@ant-design/icons';
-// 移除不需要的图标组件，保持轻量
-import {getAuthConfig, getGitHubAuthURL, getOIDCAuthURL, login} from '../../api/auth';
-import type {LoginRequest} from '../../types';
+import {getAuthConfig, getGitHubAuthURL, getOIDCAuthURL, login} from '@/api/auth.ts';
+import type {LoginRequest} from '@/types';
 
 const Login = () => {
     const [loading, setLoading] = useState(false);

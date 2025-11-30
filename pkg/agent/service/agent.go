@@ -587,9 +587,9 @@ func (a *Agent) sendCommandResponse(conn *safeConn, cmdID, cmdType, status, errM
 	}
 }
 
-// GetVersion 获取版本号
+// GetVersion 获取 Agent 版本号
 func GetVersion() string {
-	return version.GetVersion()
+	return version.GetAgentVersion()
 }
 
 // handleTamperProtect 处理防篡改保护指令（增量更新）

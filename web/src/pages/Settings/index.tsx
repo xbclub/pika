@@ -1,10 +1,10 @@
 import {Tabs} from 'antd';
-import {Bell, MessageSquare, Settings2, Database} from 'lucide-react';
+import {Bell, Database, MessageSquare, Settings2} from 'lucide-react';
 import AlertSettings from './AlertSettings';
 import NotificationChannels from './NotificationChannels';
 import SystemConfig from './SystemConfig';
 import MetricsConfig from './MetricsConfig';
-import {PageHeader} from "../../components";
+import {PageHeader} from "@/components";
 
 const Settings = () => {
     const items = [

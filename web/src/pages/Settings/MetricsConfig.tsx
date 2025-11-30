@@ -2,9 +2,9 @@ import {useEffect} from 'react';
 import {App, Button, Card, Form, InputNumber, Space, Spin} from 'antd';
 import {Database, Clock, BarChart3} from 'lucide-react';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import type {MetricsConfig} from '../../api/metrics-config';
-import {getMetricsConfig, saveMetricsConfig} from '../../api/metrics-config';
-import {getErrorMessage} from '../../lib/utils';
+import type {MetricsConfig} from '@/api/property.ts';
+import {getMetricsConfig, saveMetricsConfig} from '@/api/property.ts';
+import {getErrorMessage} from '@/lib/utils';
 
 const MetricsConfigComponent = () => {
     const [form] = Form.useForm();

@@ -2,9 +2,9 @@ import {useEffect} from 'react';
 import {App, Button, Card, Form, InputNumber, Space, Switch} from 'antd';
 import {Save} from 'lucide-react';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import type {AlertConfig} from '../../types';
-import {createAlertConfig, getAlertConfigsByAgent, updateAlertConfig} from '../../api/alert';
-import {getErrorMessage} from '../../lib/utils';
+import type {AlertConfig} from '@/types';
+import {createAlertConfig, getAlertConfigsByAgent, updateAlertConfig} from '@/api/alert.ts';
+import {getErrorMessage} from '@/lib/utils';
 
 const AlertSettings = () => {
     const [form] = Form.useForm();

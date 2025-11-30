@@ -10,11 +10,11 @@ import {
     generateApiKey,
     listApiKeys,
     updateApiKeyName,
-} from '../../api/apiKey';
-import type {ApiKey, GenerateApiKeyRequest} from '../../types';
+} from '@/api/apiKey.ts';
+import type {ApiKey, GenerateApiKeyRequest} from '@/types';
 import dayjs from 'dayjs';
-import {getErrorMessage} from '../../lib/utils';
-import {PageHeader} from '../../components';
+import {getErrorMessage} from '@/lib/utils';
+import {PageHeader} from '@/components';
 
 const ApiKeyList = () => {
     const {message: messageApi} = App.useApp();

@@ -2,9 +2,9 @@ import {useEffect, useState} from 'react';
 import {App, Button, Card, Form, Input, Radio, Space, Spin, Upload} from 'antd';
 import {Upload as UploadIcon, Grid3x3, List} from 'lucide-react';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import type {SystemConfig} from '../../api/system-config';
-import {getSystemConfig, saveSystemConfig} from '../../api/system-config';
-import {getErrorMessage} from '../../lib/utils';
+import type {SystemConfig} from '@/api/property.ts';
+import {getSystemConfig, saveSystemConfig} from '@/api/property.ts';
+import {getErrorMessage} from '@/lib/utils.ts';
 import type {RcFile} from 'antd/es/upload/interface';
 
 const SystemConfigComponent = () => {

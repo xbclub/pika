@@ -2,13 +2,13 @@ import {useEffect} from 'react';
 import {App, Button, Card, Collapse, Form, Input, Select, Space, Spin, Switch} from 'antd';
 import {TestTube} from 'lucide-react';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import type {NotificationChannel} from '../../types';
 import {
     getNotificationChannels,
+    type NotificationChannel,
     saveNotificationChannels,
     testNotificationChannel,
-} from '../../api/notification-channel';
-import {getErrorMessage} from '../../lib/utils';
+} from '@/api/property.ts';
+import {getErrorMessage} from '@/lib/utils';
 
 const NotificationChannels = () => {
     const [form] = Form.useForm();

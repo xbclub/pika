@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Space} from 'antd';
+import {Button} from 'antd';
 import type {LucideIcon} from 'lucide-react';
 
 export interface Action {

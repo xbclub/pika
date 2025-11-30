@@ -3,10 +3,10 @@ import {Outlet, useLocation, useNavigate} from 'react-router-dom';
 import type {MenuProps} from 'antd';
 import {App, Avatar, Button, Dropdown, Space} from 'antd';
 import {Activity, BookOpen, Eye, Key, LogOut, Server, Settings, User as UserIcon} from 'lucide-react';
-import {logout} from '../../api/auth';
-import {getServerVersion} from '../../api/agent';
-import type {User} from '../../types';
-import {cn} from '../../lib/utils';
+import {logout} from '@/api/auth.ts';
+import {getServerVersion} from '@/api/agent.ts';
+import type {User} from '@/types';
+import {cn} from '@/lib/utils';
 
 interface NavItem {
     key: string;

@@ -552,7 +552,7 @@ func (h *AgentHandler) GetAgents(c echo.Context) error {
 // GetAgentVersion 获取 Agent 版本信息
 func (h *AgentHandler) GetAgentVersion(c echo.Context) error {
 	return orz.Ok(c, orz.Map{
-		"version": version.GetVersion(),
+		"version": version.GetAgentVersion(),
 	})
 }
 

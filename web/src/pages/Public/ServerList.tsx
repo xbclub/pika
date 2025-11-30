@@ -2,8 +2,8 @@ import {type ReactNode, useEffect, useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
 import {Cpu, EthernetPortIcon, HardDrive, Loader2, MemoryStick, Network} from 'lucide-react';
-import {listAgents, getPublicTags} from '../../api/agent';
-import type {Agent, LatestMetrics} from '../../types';
+import {listAgents, getPublicTags} from '@/api/agent.ts';
+import type {Agent, LatestMetrics} from '@/types';
 import {usePublicLayout} from '../PublicLayout';
 
 interface AgentWithMetrics extends Agent {

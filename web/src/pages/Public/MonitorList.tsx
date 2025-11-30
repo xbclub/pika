@@ -2,8 +2,8 @@ import {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
 import {AlertCircle, CheckCircle2, Clock, Loader2, Shield} from 'lucide-react';
-import {getPublicMonitors} from '../../api/monitor';
-import type {PublicMonitor} from '../../types';
+import {getPublicMonitors} from '@/api/monitor.ts';
+import type {PublicMonitor} from '@/types';
 import {usePublicLayout} from '../PublicLayout';
 
 const formatTime = (ms: number): string => {

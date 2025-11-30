@@ -1,8 +1,8 @@
 import React, {type ReactElement, useCallback, useEffect, useMemo, useState} from 'react';
 import {Alert, App, Button, Card, Select, Space, Tabs, Typography} from 'antd';
 import {CopyIcon} from 'lucide-react';
-import {listApiKeys} from '../../api/apiKey';
-import type {ApiKey} from '../../types';
+import {listApiKeys} from '@/api/apiKey.ts';
+import type {ApiKey} from '@/types';
 import linuxPng from '../../assets/os/linux.png';
 import applePng from '../../assets/os/apple.png';
 import windowsPng from '../../assets/os/win11.png';
@@ -377,7 +377,7 @@ curl -L ${serverUrl}${config.downloadUrl} -o ${AGENT_NAME}`
             </div>
 
             <Tabs
-                style={{ marginTop: 24 }}
+                style={{marginTop: 24}}
                 tabPosition="left"
                 items={tabItems}
             />

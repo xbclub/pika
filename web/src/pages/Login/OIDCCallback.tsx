@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import {useNavigate, useSearchParams} from 'react-router-dom';
 import {App} from 'antd';
-import {oidcLogin} from '../../api/auth';
+import {oidcLogin} from '@/api/auth.ts';
 
 const OIDCCallback = () => {
     const navigate = useNavigate();

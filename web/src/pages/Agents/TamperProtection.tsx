@@ -8,7 +8,7 @@ import {
     type TamperConfig,
     type TamperEvent,
     updateTamperConfig
-} from '../../api/tamper.ts';
+} from '@/api/tamper.ts';
 import {App} from "antd";
 
 interface TamperProtectionProps {

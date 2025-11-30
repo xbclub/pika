@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import {useNavigate, useSearchParams} from 'react-router-dom';
 import {App} from 'antd';
-import {githubLogin} from '../../api/auth';
+import {githubLogin} from '@/api/auth.ts';
 
 const GitHubCallback = () => {
     const navigate = useNavigate();

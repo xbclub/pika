@@ -5,11 +5,11 @@ import {ProTable} from '@ant-design/pro-components';
 import {App, Button, DatePicker, Divider, Dropdown, Form, Input, Modal, Select, Space, Tag} from 'antd';
 import type {MenuProps} from 'antd';
 import {Edit, Eye, RefreshCw, Plus, Shield, Trash2, MoreVertical} from 'lucide-react';
-import {deleteAgent, getAgentPaging, getTags, updateAgentInfo} from '../../api/agent';
-import type {Agent} from '../../types';
-import {getErrorMessage} from '../../lib/utils';
+import {deleteAgent, getAgentPaging, getTags, updateAgentInfo} from '@/api/agent.ts';
+import type {Agent} from '@/types';
+import {getErrorMessage} from '@/lib/utils';
 import dayjs from 'dayjs';
-import {PageHeader} from '../../components';
+import {PageHeader} from '@/components';
 
 const AgentList = () => {
     const navigate = useNavigate();
