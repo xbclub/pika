@@ -18,7 +18,7 @@ GO_VERSION=$(shell go version)
 BUILD_TIME=$(shell date +%Y-%m-%d_%H:%M:%S)
 
 # Go 构建参数
-LDFLAGS=-s -w -X 'github.com/dushixiang/pika/pkg/version.Version=$(VERSION)'
+LDFLAGS=-s -w -X 'github.com/dushixiang/pika/pkg/version.Version=$(VERSION)' -X 'github.com/dushixiang/pika/pkg/version.AgentVersion=$(AGENT_VERSION)'
 AGENT_LDFLAGS=-s -w -X 'github.com/dushixiang/pika/pkg/version.Version=$(VERSION)' -X 'github.com/dushixiang/pika/pkg/version.AgentVersion=$(AGENT_VERSION)'
 GOFLAGS=CGO_ENABLED=0
 
