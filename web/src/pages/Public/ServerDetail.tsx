@@ -152,7 +152,7 @@ const Card = ({
     children: ReactNode;
 }) => (
     <section
-        className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 p-6 shadow-sm">
+        className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 p-6 ">
         {(title || description || action) && (
             <div
                 className="flex flex-col gap-3 border-b border-slate-100 dark:border-slate-800 pb-4 sm:flex-row sm:items-start sm:justify-between">
@@ -224,7 +224,7 @@ const TimeRangeSelector = ({
                     onClick={() => onChange(option.value)}
                     className={`rounded-lg border px-3 py-1.5 text-xs sm:text-sm font-medium transition whitespace-nowrap ${
                         isActive
-                            ? 'border-blue-200 dark:border-blue-400 bg-blue-600 dark:bg-blue-500 text-white shadow-sm'
+                            ? 'border-blue-200 dark:border-blue-400 bg-blue-600 dark:bg-blue-500 text-white '
                             : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:border-blue-200 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-200'
                     }`}
                 >
@@ -397,7 +397,7 @@ const SnapshotGrid = ({cards}: { cards: SnapshotCardData[] }) => (
             return (
                 <div
                     key={card.key}
-                    className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg dark:hover:shadow-slate-950/70"
+                    className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 p-4  transition hover:-translate-y-0.5"
                 >
                     <div className="mb-3 flex items-start justify-between">
                         <div className="flex items-center gap-2">
@@ -444,7 +444,7 @@ const CustomTooltip = ({active, payload, label, unit = '%'}: MetricsTooltipProps
 
     return (
         <div
-            className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs shadow-sm dark:shadow-slate-950/50">
+            className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs">
             <p className="font-semibold text-slate-700 dark:text-slate-200">{label}</p>
             <div className="mt-1 space-y-1">
                 {payload.map((entry, index) => {
@@ -827,7 +827,7 @@ const ServerDetail = () => {
         <div className="bg-slate-50 dark:bg-slate-900">
             <div className="mx-auto flex max-w-7xl flex-col px-4 pb-10 pt-6 sm:px-6 lg:px-8">
                 <section
-                    className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900 p-6 text-white shadow-xl">
+                    className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900 p-6 text-white">
                     <div
                         className="absolute inset-0 opacity-30 [background-image:radial-gradient(circle_at_top,rgba(255,255,255,0.35),transparent_55%)]"/>
                     <div className="relative flex flex-col gap-6">
@@ -1434,7 +1434,7 @@ const ServerDetail = () => {
                                 {latestMetrics.gpu.map((gpu) => (
                                     <div
                                         key={gpu.index}
-                                        className="rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-800 p-4 shadow-sm"
+                                        className="rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-800 p-4"
                                     >
                                         <div className="mb-3 flex items-center justify-between">
                                             <div className="flex items-center gap-2">

@@ -116,7 +116,7 @@ const Card = ({
     children: ReactNode;
 }) => (
     <section
-        className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 p-6 shadow-sm">
+        className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 p-6">
         {(title || description || action) && (
             <div
                 className="flex flex-col gap-3 border-b border-slate-100 dark:border-slate-800 pb-4 sm:flex-row sm:items-start sm:justify-between">
@@ -205,7 +205,7 @@ const StatCard = ({icon, label, value, color = 'blue'}: {
 
     return (
         <div
-            className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg dark:hover:shadow-slate-950/70">
+            className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/60 p-4 transition hover:-translate-y-0.5">
             <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
                     <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${theme.icon}`}>
@@ -235,7 +235,7 @@ const CustomTooltip = ({active, payload, label, unit = ' ms'}: TooltipProps<numb
 
     return (
         <div
-            className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs shadow-lg dark:shadow-slate-950/50">
+            className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-xs">
             <p className="font-semibold text-slate-700 dark:text-slate-200">{label}</p>
             <div className="mt-1 space-y-1">
                 {payload.map((entry, index) => {
@@ -416,7 +416,7 @@ const MonitorDetail = () => {
             <div className="mx-auto flex max-w-7xl flex-col px-4 pb-10 pt-6 sm:px-6 lg:px-8">
                 {/* Hero Section */}
                 <section
-                    className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900 p-6 text-white shadow-xl">
+                    className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-blue-900 p-6 text-white">
                     <div
                         className="absolute inset-0 opacity-30 [background-image:radial-gradient(circle_at_top,rgba(255,255,255,0.35),transparent_55%)]"/>
                     <div className="relative flex flex-col gap-6">
