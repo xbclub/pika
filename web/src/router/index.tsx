@@ -17,6 +17,7 @@ const ServerDetailPage = lazy(() => import('../pages/Public/ServerDetail'));
 const PublicMonitorListPage = lazy(() => import('../pages/Public/MonitorList'));
 const PublicMonitorDetailPage = lazy(() => import('../pages/Public/MonitorDetail'));
 const MonitorListPage = lazy(() => import('../pages/Monitors/MonitorList'));
+const DDNSPage = lazy(() => import('../pages/DDNS'));
 const AlertRecordListPage = lazy(() => import('../pages/AlertRecords'));
 
 const LoadingFallback = () => (
@@ -99,6 +100,10 @@ const router = createBrowserRouter([
             {
                 path: 'monitors',
                 element: lazyLoad(MonitorListPage),
+            },
+            {
+                path: 'ddns',
+                element: lazyLoad(DDNSPage),
             },
             {
                 path: 'alert-records',

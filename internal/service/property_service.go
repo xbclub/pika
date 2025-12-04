@@ -23,6 +23,8 @@ const (
 	PropertyIDMetricsConfig = "metrics_config"
 	// PropertyIDAlertConfig 告警配置的固定 ID
 	PropertyIDAlertConfig = "alert_config"
+	// PropertyIDDNSProviders DNS 服务商配置的固定 ID
+	PropertyIDDNSProviders = "dns_providers"
 )
 
 type PropertyService struct {
@@ -158,6 +160,80 @@ func (s *PropertyService) SetAlertConfig(ctx context.Context, config models.Aler
 	return s.Set(ctx, PropertyIDAlertConfig, "告警配置", config)
 }
 
+// GetDNSProviderConfigs 获取 DNS 服务商配置列表
+func (s *PropertyService) GetDNSProviderConfigs(ctx context.Context) ([]models.DNSProviderConfig, error) {
+	var providers []models.DNSProviderConfig
+	err := s.GetValue(ctx, PropertyIDDNSProviders, &providers)
+	if err != nil {
+		return nil, fmt.Errorf("获取 DNS 服务商配置失败: %w", err)
+	}
+	return providers, nil
+}
+
+// GetDNSProviderByType 根据 Provider 类型获取单个配置
+func (s *PropertyService) GetDNSProviderByType(ctx context.Context, providerType string) (*models.DNSProviderConfig, error) {
+	providers, err := s.GetDNSProviderConfigs(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, provider := range providers {
+		if provider.Provider == providerType {
+			return &provider, nil
+		}
+	}
+	return nil, fmt.Errorf("未找到 DNS 服务商配置: %s", providerType)
+}
+
+// SetDNSProviderConfigs 设置 DNS 服务商配置列表
+func (s *PropertyService) SetDNSProviderConfigs(ctx context.Context, providers []models.DNSProviderConfig) error {
+	return s.Set(ctx, PropertyIDDNSProviders, "DNS 服务商配置", providers)
+}
+
+// UpsertDNSProvider 创建或更新单个 DNS 服务商配置（每种类型只允许一个）
+func (s *PropertyService) UpsertDNSProvider(ctx context.Context, newProvider models.DNSProviderConfig) error {
+	providers, err := s.GetDNSProviderConfigs(ctx)
+	if err != nil && err.Error() != "获取 DNS 服务商配置失败: record not found" {
+		return err
+	}
+
+	// 查找是否已存在该类型的配置
+	found := false
+	for i, provider := range providers {
+		if provider.Provider == newProvider.Provider {
+			// 更新现有配置
+			providers[i] = newProvider
+			found = true
+			break
+		}
+	}
+
+	// 如果不存在，添加新配置
+	if !found {
+		providers = append(providers, newProvider)
+	}
+
+	return s.SetDNSProviderConfigs(ctx, providers)
+}
+
+// DeleteDNSProvider 删除指定类型的 DNS 服务商配置
+func (s *PropertyService) DeleteDNSProvider(ctx context.Context, providerType string) error {
+	providers, err := s.GetDNSProviderConfigs(ctx)
+	if err != nil {
+		return err
+	}
+
+	// 过滤掉指定类型的配置
+	var newProviders []models.DNSProviderConfig
+	for _, provider := range providers {
+		if provider.Provider != providerType {
+			newProviders = append(newProviders, provider)
+		}
+	}
+
+	return s.SetDNSProviderConfigs(ctx, newProviders)
+}
+
 // defaultPropertyConfig 默认配置项定义
 type defaultPropertyConfig struct {
 	ID    string
@@ -218,6 +294,11 @@ func (s *PropertyService) InitializeDefaultConfigs(ctx context.Context) error {
 					AgentOfflineDuration: 300, // 5分钟
 				},
 			},
+		},
+		{
+			ID:    PropertyIDDNSProviders,
+			Name:  "DNS 服务商配置",
+			Value: []models.DNSProviderConfig{}, // 默认为空数组
 		},
 	}
 

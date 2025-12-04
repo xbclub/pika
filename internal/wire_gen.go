@@ -37,7 +37,10 @@ func InitializeApp(logger *zap.Logger, db *gorm.DB, cfg *config.AppConfig) (*App
 	monitorService := service.NewMonitorService(logger, db, manager)
 	tamperRepo := repo.NewTamperRepo(db)
 	tamperService := service.NewTamperService(logger, tamperRepo, manager)
-	agentHandler := handler.NewAgentHandler(logger, agentService, metricService, monitorService, tamperService, manager)
+	ddnsConfigRepo := repo.NewDDNSConfigRepo(db)
+	ddnsRecordRepo := repo.NewDDNSRecordRepo(db)
+	ddnsService := service.NewDDNSService(logger, ddnsConfigRepo, ddnsRecordRepo, propertyService, manager)
+	agentHandler := handler.NewAgentHandler(logger, agentService, metricService, monitorService, tamperService, ddnsService, manager)
 	apiKeyHandler := handler.NewApiKeyHandler(logger, apiKeyService)
 	notifier := service.NewNotifier(logger)
 	alertService := service.NewAlertService(logger, db, propertyService, notifier)
@@ -45,22 +48,27 @@ func InitializeApp(logger *zap.Logger, db *gorm.DB, cfg *config.AppConfig) (*App
 	propertyHandler := handler.NewPropertyHandler(logger, propertyService, notifier)
 	monitorHandler := handler.NewMonitorHandler(logger, monitorService, agentService)
 	tamperHandler := handler.NewTamperHandler(logger, tamperService)
+	dnsProviderHandler := handler.NewDNSProviderHandler(logger, propertyService)
+	ddnsHandler := handler.NewDDNSHandler(logger, ddnsService)
 	appComponents := &AppComponents{
-		AccountHandler:  accountHandler,
-		AgentHandler:    agentHandler,
-		ApiKeyHandler:   apiKeyHandler,
-		AlertHandler:    alertHandler,
-		PropertyHandler: propertyHandler,
-		MonitorHandler:  monitorHandler,
-		TamperHandler:   tamperHandler,
-		AgentService:    agentService,
-		MetricService:   metricService,
-		AlertService:    alertService,
-		PropertyService: propertyService,
-		MonitorService:  monitorService,
-		ApiKeyService:   apiKeyService,
-		TamperService:   tamperService,
-		WSManager:       manager,
+		AccountHandler:     accountHandler,
+		AgentHandler:       agentHandler,
+		ApiKeyHandler:      apiKeyHandler,
+		AlertHandler:       alertHandler,
+		PropertyHandler:    propertyHandler,
+		MonitorHandler:     monitorHandler,
+		TamperHandler:      tamperHandler,
+		DNSProviderHandler: dnsProviderHandler,
+		DDNSHandler:        ddnsHandler,
+		AgentService:       agentService,
+		MetricService:      metricService,
+		AlertService:       alertService,
+		PropertyService:    propertyService,
+		MonitorService:     monitorService,
+		ApiKeyService:      apiKeyService,
+		TamperService:      tamperService,
+		DDNSService:        ddnsService,
+		WSManager:          manager,
 	}
 	return appComponents, nil
 }
@@ -69,13 +77,15 @@ func InitializeApp(logger *zap.Logger, db *gorm.DB, cfg *config.AppConfig) (*App
 
 // AppComponents 应用组件
 type AppComponents struct {
-	AccountHandler  *handler.AccountHandler
-	AgentHandler    *handler.AgentHandler
-	ApiKeyHandler   *handler.ApiKeyHandler
-	AlertHandler    *handler.AlertHandler
-	PropertyHandler *handler.PropertyHandler
-	MonitorHandler  *handler.MonitorHandler
-	TamperHandler   *handler.TamperHandler
+	AccountHandler     *handler.AccountHandler
+	AgentHandler       *handler.AgentHandler
+	ApiKeyHandler      *handler.ApiKeyHandler
+	AlertHandler       *handler.AlertHandler
+	PropertyHandler    *handler.PropertyHandler
+	MonitorHandler     *handler.MonitorHandler
+	TamperHandler      *handler.TamperHandler
+	DNSProviderHandler *handler.DNSProviderHandler
+	DDNSHandler        *handler.DDNSHandler
 
 	AgentService    *service.AgentService
 	MetricService   *service.MetricService
@@ -84,6 +94,7 @@ type AppComponents struct {
 	MonitorService  *service.MonitorService
 	ApiKeyService   *service.ApiKeyService
 	TamperService   *service.TamperService
+	DDNSService     *service.DDNSService
 
 	WSManager *websocket.Manager
 }

@@ -11,6 +11,7 @@ import (
 
 	"github.com/dushixiang/pika/internal/config"
 	"github.com/dushixiang/pika/internal/handler"
+	"github.com/dushixiang/pika/internal/migrations"
 	"github.com/dushixiang/pika/internal/models"
 	"github.com/dushixiang/pika/internal/scheduler"
 	"github.com/dushixiang/pika/pkg/replace"
@@ -39,6 +40,12 @@ func setup(app *orz.App) error {
 	// 数据库迁移
 	if err := autoMigrate(app.GetDatabase()); err != nil {
 		return err
+	}
+
+	// 执行 DDNS domains 字段拆分迁移
+	if err := migrations.MigrateDDNSDomainsSplit(app.GetDatabase(), app.Logger()); err != nil {
+		app.Logger().Error("DDNS domains 迁移失败", zap.Error(err))
+		// 不返回错误，继续启动（迁移失败不应阻止应用启动）
 	}
 
 	// 读取应用配置
@@ -96,6 +103,9 @@ func setup(app *orz.App) error {
 
 	// 启动监控统计计算任务
 	go startMonitorStatsCalculation(ctx, components, app.Logger())
+
+	// 启动 DDNS 定时任务
+	go components.DDNSService.Run(ctx)
 
 	// 设置API
 	setupApi(app, components)
@@ -262,6 +272,21 @@ func setupApi(app *orz.App, components *AppComponents) {
 		adminApi.GET("/monitors/:id", components.MonitorHandler.Get)
 		adminApi.PUT("/monitors/:id", components.MonitorHandler.Update)
 		adminApi.DELETE("/monitors/:id", components.MonitorHandler.Delete)
+
+		// DNS Provider 管理
+		adminApi.GET("/dns-providers", components.DNSProviderHandler.GetAll)
+		adminApi.POST("/dns-providers", components.DNSProviderHandler.Upsert)
+		adminApi.DELETE("/dns-providers/:provider", components.DNSProviderHandler.Delete)
+
+		// DDNS 配置管理
+		adminApi.GET("/ddns", components.DDNSHandler.Paging)
+		adminApi.POST("/ddns", components.DDNSHandler.Create)
+		adminApi.GET("/ddns/:id", components.DDNSHandler.Get)
+		adminApi.PUT("/ddns/:id", components.DDNSHandler.Update)
+		adminApi.DELETE("/ddns/:id", components.DDNSHandler.Delete)
+		adminApi.POST("/ddns/:id/enable", components.DDNSHandler.Enable)
+		adminApi.POST("/ddns/:id/disable", components.DDNSHandler.Disable)
+		adminApi.GET("/ddns/:id/records", components.DDNSHandler.GetRecords)
 	}
 
 	// OIDC 认证路由（如果启用）
@@ -295,6 +320,8 @@ func autoMigrate(database *gorm.DB) error {
 		&models.TamperProtectConfig{},
 		&models.TamperEvent{},
 		&models.TamperAlert{},
+		&models.DDNSConfig{},
+		&models.DDNSRecord{},
 		// 聚合表
 		&models.AggregatedCPUMetricModel{},
 		&models.AggregatedMemoryMetricModel{},

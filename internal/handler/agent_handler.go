@@ -29,12 +29,13 @@ type AgentHandler struct {
 	metricService *service.MetricService
 	monitorSvc    *service.MonitorService
 	tamperService *service.TamperService
+	ddnsService   *service.DDNSService
 	wsManager     *ws.Manager
 	upgrader      websocket.Upgrader
 }
 
 func NewAgentHandler(logger *zap.Logger, agentService *service.AgentService, metricService *service.MetricService,
-	monitorService *service.MonitorService, tamperService *service.TamperService, wsManager *ws.Manager) *AgentHandler {
+	monitorService *service.MonitorService, tamperService *service.TamperService, ddnsService *service.DDNSService, wsManager *ws.Manager) *AgentHandler {
 
 	h := &AgentHandler{
 		logger:        logger,
@@ -42,6 +43,7 @@ func NewAgentHandler(logger *zap.Logger, agentService *service.AgentService, met
 		metricService: metricService,
 		monitorSvc:    monitorService,
 		tamperService: tamperService,
+		ddnsService:   ddnsService,
 		wsManager:     wsManager,
 	}
 
@@ -185,6 +187,15 @@ func (h *AgentHandler) handleWebSocketMessage(ctx context.Context, agentID strin
 			return err
 		}
 		return h.tamperService.CreateAlert(agentID, alertData.Path, alertData.Details, alertData.Restored, alertData.Timestamp)
+
+	case protocol.MessageTypeDDNSIPReport:
+		// DDNS IP 上报 - 异步处理，避免阻塞 WebSocket 消息循环
+		var ipReport protocol.DDNSIPReportData
+		if err := json.Unmarshal(data, &ipReport); err != nil {
+			h.logger.Error("failed to unmarshal ddns ip report", zap.Error(err))
+			return err
+		}
+		return h.ddnsService.HandleIPReport(ctx, agentID, &ipReport)
 
 	case protocol.MessageTypeTamperProtect:
 		// 防篡改配置响应

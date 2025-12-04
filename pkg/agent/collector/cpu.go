@@ -64,17 +64,10 @@ func (c *CPUCollector) Collect() (*protocol.CPUData, error) {
 		cpuPercent = percentages[0]
 	}
 
-	// 获取每个核心的使用率
-	perCorePercent, err := cpu.Percent(time.Second, true)
-	if err != nil {
-		perCorePercent = nil // 如果失败,不影响整体数据
-	}
-
 	return &protocol.CPUData{
 		LogicalCores:  c.logicalCores,
 		PhysicalCores: c.physicalCores,
 		ModelName:     c.modelName,
 		UsagePercent:  cpuPercent,
-		PerCore:       perCorePercent,
 	}, nil
 }

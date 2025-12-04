@@ -2,9 +2,9 @@ package audit
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -216,7 +216,7 @@ func (uac *UserAssetsCollector) collectCurrentLogins() []protocol.LoginSession {
 		idleTime := 0
 		if idleStr != "-" {
 			// 简化处理,不解析复杂格式
-			fmt.Sscanf(idleStr, "%d", &idleTime)
+			idleTime = parseInt(idleStr)
 		}
 
 		session := protocol.LoginSession{
@@ -458,8 +458,7 @@ func (uac *UserAssetsCollector) collectSSHConfig() *protocol.SSHConfig {
 
 // parseInt 解析整数
 func parseInt(s string) int {
-	var result int
-	fmt.Sscanf(s, "%d", &result)
+	result, _ := strconv.Atoi(s)
 	return result
 }
 

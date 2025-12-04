@@ -271,6 +271,8 @@ func (a *Agent) readLoop(conn *websocket.Conn, done chan struct{}) error {
 			go a.handleMonitorConfig(msg.Data)
 		case protocol.MessageTypeTamperProtect:
 			go a.handleTamperProtect(msg.Data)
+		case protocol.MessageTypeDDNSConfig:
+			go a.handleDDNSConfig(msg.Data)
 		default:
 			// 忽略其他类型
 		}
@@ -763,5 +765,98 @@ func (a *Agent) tamperAlertLoop(ctx context.Context, conn *safeConn, done chan s
 				log.Printf("📤 已上报属性篡改告警: %s - %s", alert.Path, status)
 			}
 		}
+	}
+}
+
+// handleDDNSConfig 处理 DDNS 配置（服务端定时下发）
+func (a *Agent) handleDDNSConfig(data json.RawMessage) {
+	var ddnsConfig protocol.DDNSConfigData
+	if err := json.Unmarshal(data, &ddnsConfig); err != nil {
+		log.Printf("⚠️  解析 DDNS 配置失败: %v", err)
+		return
+	}
+
+	if !ddnsConfig.Enabled {
+		log.Println("ℹ️  DDNS 已禁用，跳过 IP 检查")
+		return
+	}
+
+	conn := a.getActiveConn()
+	manager := a.getCollectorManager()
+	if conn == nil || manager == nil {
+		log.Println("⚠️  当前连接未就绪，无法执行 DDNS IP 检查")
+		return
+	}
+
+	log.Println("📥 收到 DDNS 配置检查请求，开始采集 IP 地址")
+
+	// 采集 IP 地址并上报
+	if err := a.collectAndSendDDNSIP(conn, manager, &ddnsConfig); err != nil {
+		log.Printf("⚠️  DDNS IP 采集失败: %v", err)
+	} else {
+		log.Println("✅ DDNS IP 地址已上报")
+	}
+}
+
+// collectAndSendDDNSIP 采集并发送 DDNS IP 地址
+func (a *Agent) collectAndSendDDNSIP(conn *safeConn, manager *collector.Manager, config *protocol.DDNSConfigData) error {
+	var ipReport protocol.DDNSIPReportData
+
+	// 采集 IPv4
+	if config.EnableIPv4 {
+		ipv4, err := a.getIPAddress(manager, config.IPv4GetMethod, config.IPv4GetValue, false)
+		if err != nil {
+			log.Printf("⚠️  获取 IPv4 失败: %v", err)
+		} else {
+			ipReport.IPv4 = ipv4
+			log.Printf("✅ 获取 IPv4: %s", ipv4)
+		}
+	}
+
+	// 采集 IPv6
+	if config.EnableIPv6 {
+		ipv6, err := a.getIPAddress(manager, config.IPv6GetMethod, config.IPv6GetValue, true)
+		if err != nil {
+			log.Printf("⚠️  获取 IPv6 失败: %v", err)
+		} else {
+			ipReport.IPv6 = ipv6
+			log.Printf("✅ 获取 IPv6: %s", ipv6)
+		}
+	}
+
+	// 如果没有获取到任何 IP，返回错误
+	if ipReport.IPv4 == "" && ipReport.IPv6 == "" {
+		return fmt.Errorf("未获取到任何 IP 地址")
+	}
+
+	// 序列化并发送
+	data, err := json.Marshal(ipReport)
+	if err != nil {
+		return fmt.Errorf("序列化 IP 报告失败: %w", err)
+	}
+
+	msg := protocol.Message{
+		Type: protocol.MessageTypeDDNSIPReport,
+		Data: data,
+	}
+
+	if err := conn.WriteJSON(msg); err != nil {
+		return fmt.Errorf("发送 IP 报告失败: %w", err)
+	}
+
+	return nil
+}
+
+// getIPAddress 根据配置获取 IP 地址
+func (a *Agent) getIPAddress(manager *collector.Manager, method, value string, isIPv6 bool) (string, error) {
+	switch method {
+	case "api":
+		// 使用 API 获取公网 IP
+		return manager.GetPublicIP(value, isIPv6)
+	case "interface":
+		// 从网络接口获取 IP
+		return manager.GetInterfaceIP(value, isIPv6)
+	default:
+		return "", fmt.Errorf("不支持的 IP 获取方式: %s", method)
 	}
 }

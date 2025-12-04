@@ -456,3 +456,12 @@ export interface AlertRecord {
     createdAt: number;
     updatedAt: number;
 }
+
+// 通用分页响应
+export interface PageResponse<T> {
+    items: T[];
+    total: number;
+}
+
+// 导出 DDNS 相关类型
+export * from './ddns';

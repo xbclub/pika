@@ -54,6 +54,9 @@ const (
 	MessageTypeTamperProtect MessageType = "tamper_protect"
 	MessageTypeTamperEvent   MessageType = "tamper_event"
 	MessageTypeTamperAlert   MessageType = "tamper_alert"
+	// DDNS 消息
+	MessageTypeDDNSConfig   MessageType = "ddns_config"
+	MessageTypeDDNSIPReport MessageType = "ddns_ip_report"
 )
 
 type MetricType string

@@ -219,17 +219,6 @@ const SystemConfigComponent = () => {
                                         {uploading ? '处理中...' : '上传 Logo'}
                                     </Button>
                                 </Upload>
-
-                                <div className="text-sm text-gray-500 space-y-1">
-                                    <div>💡 使用提示：</div>
-                                    <ul className="list-disc list-inside space-y-1 ml-2">
-                                        <li>支持 PNG、JPG、GIF、SVG 等常见图片格式</li>
-                                        <li>建议使用 PNG 格式，支持透明背景</li>
-                                        <li>建议图片尺寸为 256x256 像素</li>
-                                        <li>文件大小不能超过 500KB</li>
-                                        <li>上传后图片将转换为 base64 格式存储</li>
-                                    </ul>
-                                </div>
                             </Space>
                         </Form.Item>
                     </Card>

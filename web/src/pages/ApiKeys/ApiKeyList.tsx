@@ -244,17 +244,17 @@ const ApiKeyList = () => {
                 description="管理探针连接所需的API密钥,用于验证探针注册"
                 actions={[
                     {
-                        key: 'refresh',
-                        label: '刷新',
-                        icon: <RefreshCw size={16}/>,
-                        onClick: () => actionRef.current?.reload(),
-                    },
-                    {
                         key: 'create',
                         label: '生成密钥',
                         icon: <Plus size={16}/>,
                         type: 'primary',
                         onClick: handleCreate,
+                    },
+                    {
+                        key: 'refresh',
+                        label: '刷新',
+                        icon: <RefreshCw size={16}/>,
+                        onClick: () => actionRef.current?.reload(),
                     },
                 ]}
             />

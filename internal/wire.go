@@ -29,6 +29,7 @@ func InitializeApp(logger *zap.Logger, db *gorm.DB, cfg *config.AppConfig) (*App
 		service.NewTamperService,
 		service.NewMetricService,
 		service.NewGeoIPService,
+		service.NewDDNSService,
 
 		service.NewNotifier,
 		// WebSocket Manager
@@ -36,6 +37,8 @@ func InitializeApp(logger *zap.Logger, db *gorm.DB, cfg *config.AppConfig) (*App
 
 		// Repositories
 		repo.NewTamperRepo,
+		repo.NewDDNSConfigRepo,
+		repo.NewDDNSRecordRepo,
 
 		// Handlers
 		handler.NewAgentHandler,
@@ -45,6 +48,8 @@ func InitializeApp(logger *zap.Logger, db *gorm.DB, cfg *config.AppConfig) (*App
 		handler.NewApiKeyHandler,
 		handler.NewAccountHandler,
 		handler.NewTamperHandler,
+		handler.NewDNSProviderHandler,
+		handler.NewDDNSHandler,
 
 		// App Components
 		wire.Struct(new(AppComponents), "*"),
@@ -54,13 +59,15 @@ func InitializeApp(logger *zap.Logger, db *gorm.DB, cfg *config.AppConfig) (*App
 
 // AppComponents 应用组件
 type AppComponents struct {
-	AccountHandler  *handler.AccountHandler
-	AgentHandler    *handler.AgentHandler
-	ApiKeyHandler   *handler.ApiKeyHandler
-	AlertHandler    *handler.AlertHandler
-	PropertyHandler *handler.PropertyHandler
-	MonitorHandler  *handler.MonitorHandler
-	TamperHandler   *handler.TamperHandler
+	AccountHandler     *handler.AccountHandler
+	AgentHandler       *handler.AgentHandler
+	ApiKeyHandler      *handler.ApiKeyHandler
+	AlertHandler       *handler.AlertHandler
+	PropertyHandler    *handler.PropertyHandler
+	MonitorHandler     *handler.MonitorHandler
+	TamperHandler      *handler.TamperHandler
+	DNSProviderHandler *handler.DNSProviderHandler
+	DDNSHandler        *handler.DDNSHandler
 
 	AgentService    *service.AgentService
 	MetricService   *service.MetricService
@@ -69,6 +76,7 @@ type AppComponents struct {
 	MonitorService  *service.MonitorService
 	ApiKeyService   *service.ApiKeyService
 	TamperService   *service.TamperService
+	DDNSService     *service.DDNSService
 
 	WSManager *websocket.Manager
 }

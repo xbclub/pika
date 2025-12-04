@@ -32,6 +32,19 @@ type NotificationChannelConfig struct {
 //   "customBody": ""  // 当 bodyTemplate 为 custom 时使用，支持变量替换
 // }
 
+// DNSProviderConfig DNS 服务商配置（存储在 Property 中）
+type DNSProviderConfig struct {
+	Provider string                 `json:"provider"` // 服务商类型: aliyun, tencentcloud, cloudflare, huaweicloud
+	Enabled  bool                   `json:"enabled"`  // 是否启用
+	Config   map[string]interface{} `json:"config"`   // 配置对象（敏感信息）
+}
+
+// DNS Provider 配置格式说明：
+// aliyun:       { "accessKeyId": "xxx", "accessKeySecret": "xxx" }
+// tencentcloud: { "secretId": "xxx", "secretKey": "xxx" }
+// cloudflare:   { "apiToken": "xxx" }
+// huaweicloud:  { "accessKeyId": "xxx", "secretAccessKey": "xxx", "region": "cn-south-1" }
+
 // WebhookConfig 自定义 Webhook 配置结构
 type WebhookConfig struct {
 	URL          string            `json:"url"`                    // Webhook URL

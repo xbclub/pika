@@ -19,7 +19,13 @@ require (
 	github.com/jpillora/backoff v1.0.0
 	github.com/kardianos/service v1.2.4
 	github.com/labstack/echo/v4 v4.13.4
+	github.com/libdns/alidns v1.0.6-beta.1
+	github.com/libdns/cloudflare v0.2.2
+	github.com/libdns/huaweicloud v1.0.0
+	github.com/libdns/libdns v1.1.1
+	github.com/libdns/tencentcloud v1.4.3
 	github.com/minio/selfupdate v0.6.0
+	github.com/oschwald/geoip2-golang v1.13.0
 	github.com/prometheus-community/pro-bing v0.7.0
 	github.com/shirou/gopsutil/v4 v4.25.10
 	github.com/spf13/afero v1.15.0
@@ -58,7 +64,6 @@ require (
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/ncruces/go-strftime v1.0.0 // indirect
-	github.com/oschwald/geoip2-golang v1.13.0 // indirect
 	github.com/oschwald/maxminddb-golang v1.13.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect

@@ -334,17 +334,17 @@ const MonitorList = () => {
                 description="配置 HTTP/TCP/ICMP 服务可用性检测，集中管理监控策略与探针覆盖范围"
                 actions={[
                     {
-                        key: 'refresh',
-                        label: '刷新',
-                        icon: <RefreshCw size={16}/>,
-                        onClick: () => actionRef.current?.reload(),
-                    },
-                    {
                         key: 'create',
                         label: '新建监控',
                         icon: <Plus size={16}/>,
                         type: 'primary',
                         onClick: handleCreate,
+                    },
+                    {
+                        key: 'refresh',
+                        label: '刷新',
+                        icon: <RefreshCw size={16}/>,
+                        onClick: () => actionRef.current?.reload(),
                     },
                 ]}
             />
@@ -372,9 +372,6 @@ const MonitorList = () => {
                         }}
                         style={{width: 260}}
                     />,
-                    <Button key="add" type="primary" icon={<Plus size={16}/>} onClick={handleCreate}>
-                        新建监控
-                    </Button>,
                 ]}
                 request={async (params) => {
                     const {current = 1, pageSize = 10, keyword: kw = ''} = params;

@@ -24,6 +24,7 @@ type Manager struct {
 	temperatureCollector       *TemperatureCollector
 	gpuCollector               *GPUCollector
 	monitorCollector           *MonitorCollector
+	ddnsCollector              *DDNSCollector
 }
 
 // NewManager 创建采集器管理器
@@ -39,6 +40,7 @@ func NewManager(cfg *config.Config) *Manager {
 		temperatureCollector:       NewTemperatureCollector(),
 		gpuCollector:               NewGPUCollector(),
 		monitorCollector:           NewMonitorCollector(),
+		ddnsCollector:              nil, // DDNS 采集器需要配置后才能初始化
 	}
 }
 
@@ -136,6 +138,49 @@ func (m *Manager) CollectAndSendMonitor(conn WebSocketWriter, items []protocol.M
 	return m.sendMetrics(conn, protocol.MetricTypeMonitor, monitorDataList)
 }
 
+// UpdateDDNSConfig 更新 DDNS 配置
+func (m *Manager) UpdateDDNSConfig(config *protocol.DDNSConfigData) {
+	if config == nil || !config.Enabled {
+		m.ddnsCollector = nil
+		return
+	}
+
+	if m.ddnsCollector == nil {
+		m.ddnsCollector = NewDDNSCollector(config)
+	} else {
+		m.ddnsCollector.UpdateConfig(config)
+	}
+}
+
+// CollectAndSendDDNSIP 采集并发送 DDNS IP 地址
+func (m *Manager) CollectAndSendDDNSIP(conn WebSocketWriter) error {
+	if m.ddnsCollector == nil {
+		return nil // DDNS 未启用，静默返回
+	}
+
+	ipData, err := m.ddnsCollector.Collect()
+	if err != nil {
+		return err
+	}
+
+	// 只有当至少有一个 IP 地址时才发送
+	if ipData.IPv4 == "" && ipData.IPv6 == "" {
+		return nil
+	}
+
+	dataBytes, err := json.Marshal(ipData)
+	if err != nil {
+		return err
+	}
+
+	msg := protocol.Message{
+		Type: protocol.MessageTypeDDNSIPReport,
+		Data: dataBytes,
+	}
+
+	return conn.WriteJSON(msg)
+}
+
 // sendMetrics 发送指标数据
 func (m *Manager) sendMetrics(conn WebSocketWriter, metricType protocol.MetricType, data interface{}) error {
 	dataBytes, err := json.Marshal(data)
@@ -159,4 +204,20 @@ func (m *Manager) sendMetrics(conn WebSocketWriter, metricType protocol.MetricTy
 	}
 
 	return conn.WriteJSON(msg)
+}
+
+// GetPublicIP 通过 API 获取公网 IP 地址
+func (m *Manager) GetPublicIP(apiURL string, isIPv6 bool) (string, error) {
+	collector := NewDDNSCollector(&protocol.DDNSConfigData{
+		Enabled: true,
+	})
+	return collector.GetIPFromAPI(apiURL, isIPv6)
+}
+
+// GetInterfaceIP 从网络接口获取 IP 地址
+func (m *Manager) GetInterfaceIP(interfaceName string, isIPv6 bool) (string, error) {
+	collector := NewDDNSCollector(&protocol.DDNSConfigData{
+		Enabled: true,
+	})
+	return collector.GetIPFromInterface(interfaceName, isIPv6)
 }

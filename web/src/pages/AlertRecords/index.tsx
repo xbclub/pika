@@ -1,8 +1,8 @@
 import {useRef, useState} from 'react';
 import type {ActionType, ProColumns} from '@ant-design/pro-components';
 import {ProTable} from '@ant-design/pro-components';
-import {App, Button, Select, Space, Tag} from 'antd';
-import {RefreshCw, Trash2} from 'lucide-react';
+import {App, Divider, Select, Space, Tag} from 'antd';
+import {Trash2} from 'lucide-react';
 import {clearAlertRecords, getAlertRecords} from '@/api/alert.ts';
 import type {AlertRecord} from '@/types';
 import dayjs from 'dayjs';
@@ -184,7 +184,19 @@ const AlertRecordList = () => {
             <PageHeader
                 title="告警记录"
                 description="查看和管理系统的告警记录"
+                actions={[
+                    {
+                        key: 'clear',
+                        label: '清空记录',
+                        icon: <Trash2 className="h-4 w-4"/>,
+                        type: 'primary',
+                        danger: true,
+                        onClick: handleClear,
+                    },
+                ]}
             />
+
+            <Divider/>
 
             <ProTable<AlertRecord>
                 columns={columns}
@@ -235,19 +247,6 @@ const AlertRecordList = () => {
                                 }
                                 options={agentOptions}
                             />
-                            <Button
-                                type="primary"
-                                icon={<RefreshCw className="h-4 w-4"/>}
-                                onClick={() => actionRef.current?.reload()}
-                            >
-                                刷新
-                            </Button>
-                            <Button danger
-                                    icon={<Trash2 className="h-4 w-4"/>}
-                                    onClick={handleClear}
-                            >
-                                清空记录
-                            </Button>
                         </Space>,
                     ],
                 }}

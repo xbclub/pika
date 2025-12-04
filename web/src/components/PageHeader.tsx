@@ -8,6 +8,7 @@ export interface Action {
     icon?: React.ReactElement<LucideIcon>;
     type?: 'default' | 'primary';
     onClick: () => void;
+    danger?: boolean;
 }
 
 interface PageHeaderProps {
@@ -34,6 +35,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({title, description, actio
                             type={action.type || 'default'}
                             icon={action.icon}
                             onClick={action.onClick}
+                            danger={action.danger}
                         >
                             {action.label}
                         </Button>

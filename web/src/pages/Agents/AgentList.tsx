@@ -1,10 +1,10 @@
-import {useRef, useState, useEffect} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import type {ActionType, ProColumns} from '@ant-design/pro-components';
 import {ProTable} from '@ant-design/pro-components';
-import {App, Button, DatePicker, Divider, Dropdown, Form, Input, Modal, Select, Space, Tag} from 'antd';
 import type {MenuProps} from 'antd';
-import {Edit, Eye, RefreshCw, Plus, Shield, Trash2, MoreVertical} from 'lucide-react';
+import {App, Button, DatePicker, Divider, Dropdown, Form, Input, Modal, Select, Space, Tag} from 'antd';
+import {Edit, Eye, MoreVertical, Plus, RefreshCw, Shield, Trash2} from 'lucide-react';
 import {deleteAgent, getAgentPaging, getTags, updateAgentInfo} from '@/api/agent.ts';
 import type {Agent} from '@/types';
 import {getErrorMessage} from '@/lib/utils';
@@ -129,7 +129,7 @@ const AgentList = () => {
                 <>
                     {record.tags && record.tags?.length > 0 ? (
                         record.tags?.map((tag, index) => (
-                            <Tag key={index} color="blue" bordered={false} style={{ marginBottom: 4 }}>
+                            <Tag key={index} color="blue" bordered={false} style={{marginBottom: 4}}>
                                 {tag}
                             </Tag>
                         ))
@@ -374,7 +374,7 @@ const AgentList = () => {
                         <Select
                             mode="tags"
                             placeholder="请选择或输入标签"
-                            options={existingTags?.map(tag => ({ label: tag, value: tag }))}
+                            options={existingTags?.map(tag => ({label: tag, value: tag}))}
                             tokenSeparators={[',']}
                         />
                     </Form.Item>
