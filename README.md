@@ -52,6 +52,11 @@ Pika 是一个轻量级的探针监控系统，支持实时数据采集、存储
 ## 截图
 
 ![public1.png](screenshots/public1.png)
+![public2.png](screenshots/public2.png)
+![sec1.png](screenshots/sec1.png)
+![sec2.png](screenshots/sec2.png)
+![tamper.png](screenshots/tamper.png)
+![setting.png](screenshots/setting.png)
 
 ## 加入群聊 
 
