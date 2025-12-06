@@ -1,6 +1,7 @@
 package collector
 
 import (
+	"context"
 	"runtime"
 	"strings"
 	"unicode/utf8"
@@ -20,7 +21,7 @@ func NewTemperatureCollector() *TemperatureCollector {
 // Collect 采集温度数据（某些系统可能不支持）
 func (t *TemperatureCollector) Collect() ([]*protocol.TemperatureData, error) {
 	// 使用 gopsutil 的 sensors 包采集温度数据
-	temps, err := sensors.TemperaturesWithContext(nil)
+	temps, err := sensors.TemperaturesWithContext(context.Background())
 	if err != nil {
 		// 如果获取失败，返回空数组（某些系统可能不支持）
 		return []*protocol.TemperatureData{}, nil
