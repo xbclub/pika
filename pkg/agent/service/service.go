@@ -9,6 +9,7 @@ import (
 	"syscall"
 
 	"github.com/dushixiang/pika/pkg/agent/config"
+	"github.com/dushixiang/pika/pkg/agent/sysutil"
 	"github.com/dushixiang/pika/pkg/agent/updater"
 	"github.com/kardianos/service"
 )
@@ -21,32 +22,52 @@ type program struct {
 	cancel context.CancelFunc
 }
 
-// Start 启动服务
-func (p *program) Start(s service.Service) error {
-	log.Println("✅ Pika Agent 服务启动中...")
+// configureICMP 配置 ICMP 权限（抽取通用逻辑）
+func configureICMP() {
+	if err := sysutil.ConfigureICMPPermissions(); err != nil {
+		log.Printf("⚠️  配置 ICMP 权限失败: %v", err)
+		log.Println("   提示: ICMP 监控可能需要 root 权限运行，或手动执行:")
+		log.Println("   sudo sysctl -w net.ipv4.ping_group_range=\"0 2147483647\"")
+	}
+}
 
-	// 创建 context
-	p.ctx, p.cancel = context.WithCancel(context.Background())
-
+// startAgent 启动 Agent 和自动更新（抽取通用逻辑）
+func startAgent(ctx context.Context, cfg *config.Config) *Agent {
 	// 创建 Agent 实例
-	p.agent = New(p.cfg)
+	agent := New(cfg)
 
 	// 启动自动更新（如果启用）
-	if p.cfg.AutoUpdate.Enabled {
-		upd, err := updater.New(p.cfg, GetVersion())
+	if cfg.AutoUpdate.Enabled {
+		upd, err := updater.New(cfg, GetVersion())
 		if err != nil {
 			log.Printf("⚠️  创建更新器失败: %v", err)
 		} else {
-			go upd.Start(p.ctx)
+			go upd.Start(ctx)
 		}
 	}
 
 	// 在后台启动 Agent
 	go func() {
-		if err := p.agent.Start(p.ctx); err != nil {
+		if err := agent.Start(ctx); err != nil {
 			log.Printf("⚠️  探针运行出错: %v", err)
 		}
 	}()
+
+	return agent
+}
+
+// Start 启动服务
+func (p *program) Start(s service.Service) error {
+	log.Println("✅ Pika Agent 服务启动中...")
+
+	// 初始化系统配置（Linux ICMP 权限等）
+	configureICMP()
+
+	// 创建 context
+	p.ctx, p.cancel = context.WithCancel(context.Background())
+
+	// 启动 Agent
+	p.agent = startAgent(p.ctx, p.cfg)
 
 	return nil
 }
@@ -189,6 +210,9 @@ func (m *ServiceManager) Run() error {
 	log.Printf("   采集间隔: %v", m.cfg.GetCollectorInterval())
 	log.Printf("   心跳间隔: %v", m.cfg.GetHeartbeatInterval())
 
+	// 初始化系统配置（Linux ICMP 权限等）
+	configureICMP()
+
 	// 创建 context
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -197,25 +221,8 @@ func (m *ServiceManager) Run() error {
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
 
-	// 创建 Agent 实例
-	agent := New(m.cfg)
-
-	// 启动自动更新（如果启用）
-	if m.cfg.AutoUpdate.Enabled {
-		upd, err := updater.New(m.cfg, GetVersion())
-		if err != nil {
-			log.Printf("⚠️  创建更新器失败: %v", err)
-		} else {
-			go upd.Start(ctx)
-		}
-	}
-
 	// 启动 Agent
-	go func() {
-		if err := agent.Start(ctx); err != nil {
-			log.Printf("⚠️  探针运行出错: %v", err)
-		}
-	}()
+	agent := startAgent(ctx, m.cfg)
 
 	// 等待中断信号
 	<-interrupt
